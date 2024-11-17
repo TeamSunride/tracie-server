@@ -45,43 +45,45 @@ usb.on('attach', (device) => {
   switch (device.deviceDescriptor.idVendor) {
     case 0x05ac:
       // Apple Inc.
-      const currentDevice = findByIds(
-        device.deviceDescriptor.idVendor,
-        device.deviceDescriptor.idProduct,
-      );
-      if (currentDevice) {
-        currentDevice.open();
-        currentDevice.controlTransfer(
-          0x80, // bmRequestType
-          0x06, // bRequest: GET_DESCRIPTOR
-          0x0100, // wValue: Descriptor Type (Device=0x01) and Index (0)
-          0x0000, // wIndex: Language ID (0 for Device Descriptor)
-          64, // data_or_length: Number of bytes to request
-          (error, data) => {
-            // Callback
-            if (error) {
-              console.error('Error in control transfer:', error);
-            } else {
-              console.log('Device Descriptor:', data);
-              console.log(currentDevice.interfaces);
-              if (currentDevice.interfaces) {
-                const iface = currentDevice.interfaces[0];
 
-                if (iface) {
-                  if (iface.isKernelDriverActive()) iface.detachKernelDriver();
+      // USE https://github.com/httptoolkit/usbmux-client ???
+      // const currentDevice = findByIds(
+      //   device.deviceDescriptor.idVendor,
+      //   device.deviceDescriptor.idProduct,
+      // );
+      // if (currentDevice) {
+      //   currentDevice.open();
+      //   currentDevice.controlTransfer(
+      //     0x80, // bmRequestType
+      //     0x06, // bRequest: GET_DESCRIPTOR
+      //     0x0100, // wValue: Descriptor Type (Device=0x01) and Index (0)
+      //     0x0000, // wIndex: Language ID (0 for Device Descriptor)
+      //     64, // data_or_length: Number of bytes to request
+      //     (error, data) => {
+      //       // Callback
+      //       if (error) {
+      //         console.error('Error in control transfer:', error);
+      //       } else {
+      //         console.log('Device Descriptor:', data);
+      //         console.log(currentDevice.interfaces);
+      //         if (currentDevice.interfaces) {
+      //           const iface = currentDevice.interfaces[0];
 
-                  iface.claim();
+      //           if (iface) {
+      //             if (iface.isKernelDriverActive()) iface.detachKernelDriver();
 
-                  console.log('Connected to iPhone!');
-                }
-              }
-            }
-            currentDevice.close();
-          },
-        );
-      } else {
-        console.error('Device not found');
-      }
+      //             iface.claim();
+
+      //             console.log('Connected to iPhone!');
+      //           }
+      //         }
+      //       }
+      //       currentDevice.close();
+      //     },
+      //   );
+      // } else {
+      //   console.error('Device not found');
+      // }
     default:
       throw new Error('Unsupported device');
   }
