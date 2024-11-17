@@ -14,6 +14,9 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import { usb, getDeviceList } from 'usb';
+const devices: usb.Device[] = getDeviceList();
+console.log(devices);
 
 class AppUpdater {
   constructor() {
@@ -29,6 +32,22 @@ ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
+});
+
+usb.on('attach', (device) => {
+  console.log('New USB device connected:', device);
+  // You can access device descriptors and start communication here
+  console.log('Vendor ID:', device.deviceDescriptor.idVendor);
+  console.log('Product ID:', device.deviceDescriptor.idProduct);
+  
+  // Open the device for communication
+  // device.open();
+  // Handle communication here
+});
+
+// Watch for device removal
+usb.on('detach', (device) => {
+  console.log('USB device removed:', device);
 });
 
 if (process.env.NODE_ENV === 'production') {

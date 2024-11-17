@@ -78,7 +78,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.16.0",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "usb": "^2.14.0"
   },
   "devDependencies": {
     "@electron/rebuild": "^3.3.0",
@@ -106,6 +107,7 @@
     "electron": "^31.3.0",
     "electron-builder": "^24.13.3",
     "electron-devtools-installer": "^3.2.0",
+    "electron-rebuild": "^3.2.9",
     "electronmon": "^2.0.2",
     "eslint": "^8.49.0",
     "eslint-config-airbnb-base": "^15.0.0",
