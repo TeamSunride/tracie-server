@@ -14,9 +14,6 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import { usb, getDeviceList, findByIds } from 'usb';
-const devices: usb.Device[] = getDeviceList();
-console.log(devices);
 
 class AppUpdater {
   constructor() {
@@ -34,65 +31,7 @@ ipcMain.on('ipc-example', async (event, arg) => {
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
-usb.on('attach', (device) => {
-  console.log('New USB device connected:', device);
-  // You can access device descriptors and start communication here
-  console.log('Vendor ID:', device.deviceDescriptor.idVendor);
-  console.log('Product ID:', device.deviceDescriptor.idProduct);
-  console.log('Available interfaces:', device.interfaces);
 
-  // Open the device for communication
-  switch (device.deviceDescriptor.idVendor) {
-    case 0x05ac:
-      // Apple Inc.
-
-      // USE https://github.com/httptoolkit/usbmux-client ???
-      // const currentDevice = findByIds(
-      //   device.deviceDescriptor.idVendor,
-      //   device.deviceDescriptor.idProduct,
-      // );
-      // if (currentDevice) {
-      //   currentDevice.open();
-      //   currentDevice.controlTransfer(
-      //     0x80, // bmRequestType
-      //     0x06, // bRequest: GET_DESCRIPTOR
-      //     0x0100, // wValue: Descriptor Type (Device=0x01) and Index (0)
-      //     0x0000, // wIndex: Language ID (0 for Device Descriptor)
-      //     64, // data_or_length: Number of bytes to request
-      //     (error, data) => {
-      //       // Callback
-      //       if (error) {
-      //         console.error('Error in control transfer:', error);
-      //       } else {
-      //         console.log('Device Descriptor:', data);
-      //         console.log(currentDevice.interfaces);
-      //         if (currentDevice.interfaces) {
-      //           const iface = currentDevice.interfaces[0];
-
-      //           if (iface) {
-      //             if (iface.isKernelDriverActive()) iface.detachKernelDriver();
-
-      //             iface.claim();
-
-      //             console.log('Connected to iPhone!');
-      //           }
-      //         }
-      //       }
-      //       currentDevice.close();
-      //     },
-      //   );
-      // } else {
-      //   console.error('Device not found');
-      // }
-    default:
-      throw new Error('Unsupported device');
-  }
-});
-
-// Watch for device removal
-usb.on('detach', (device) => {
-  console.log('USB device removed:', device);
-});
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');

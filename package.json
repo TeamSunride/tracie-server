@@ -77,9 +77,9 @@
     "electron-updater": "^6.1.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-qr-code": "^2.0.15",
     "react-router-dom": "^6.16.0",
-    "sqlite3": "^5.1.7",
-    "usb": "^2.14.0"
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@electron/rebuild": "^3.3.0",
