@@ -14,6 +14,8 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import bleno from 'bleno';
+import { BLEEvent } from '../ble';
 
 class AppUpdater {
   constructor() {
@@ -23,15 +25,15 @@ class AppUpdater {
   }
 }
 
-let mainWindow: BrowserWindow | null = null;
+let mainWindow = null;
+// let bluetoothPinCallback;
+// let selectBluetoothCallback;
 
 ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
+  const msgTemplate = (pingPong) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
 });
-
-
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -67,7 +69,7 @@ const createWindow = async () => {
     ? path.join(process.resourcesPath, 'assets')
     : path.join(__dirname, '../../assets');
 
-  const getAssetPath = (...paths: string[]): string => {
+  const getAssetPath = (...paths) => {
     return path.join(RESOURCES_PATH, ...paths);
   };
 
@@ -80,8 +82,54 @@ const createWindow = async () => {
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'),
+      // nodeIntegration: true,
+      // contextIsolation: false,
     },
   });
+
+  ipcMain.on("start-advertising", (page, name, serviceUuids, callback) => {
+    console.log(name, serviceUuids, callback);
+    bleno.startAdvertising(name, serviceUuids, callback);
+  });
+
+  BLEEvent.on("navigate", (page) => {
+    mainWindow?.webContents.send("navigate", page);
+  });
+
+  // mainWindow.webContents.on(
+  //   'select-bluetooth-device',
+  //   (event, deviceList, callback) => {
+  //     event.preventDefault();
+  //     selectBluetoothCallback = callback;
+  //     console.log(deviceList);
+  //     const result = deviceList.find((device) => {
+  //       return device.deviceName === 'test';
+  //     });
+  //     if (result) {
+  //       callback(result.deviceId);
+  //     } else {
+  //       // The device wasn't found so we need to either wait longer (eg until the
+  //       // device is turned on) or until the user cancels the request
+  //     }
+  //   },
+  // );
+
+  // ipcMain.on('cancel-bluetooth-request', (event) => {
+  //   selectBluetoothCallback('');
+  // });
+
+  // Listen for a message from the renderer to get the response for the Bluetooth pairing.
+  // ipcMain.on('bluetooth-pairing-response', (event, response) => {
+  //   bluetoothPinCallback(response);
+  // });
+
+  // mainWindow.webContents.session.setBluetoothPairingHandler(
+  //   (details, callback) => {
+  //     bluetoothPinCallback = callback;
+  //     // Send a message to the renderer to prompt the user to confirm the pairing.
+  //     mainWindow.webContents.send('bluetooth-pairing-request', details);
+  //   },
+  // );
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 

@@ -78,8 +78,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-qr-code": "^2.0.15",
-    "react-router-dom": "^6.16.0",
-    "sqlite3": "^5.1.7"
+    "react-router-dom": "^6.16.0"
   },
   "devDependencies": {
     "@electron/rebuild": "^3.3.0",
