@@ -117,6 +117,11 @@ const configuration: webpack.Configuration = {
           'file-loader',
         ],
       },
+      // 3D models
+      {
+        test: /\.glb$/,
+        loader: 'file-loader'
+      },
     ],
   },
   plugins: [

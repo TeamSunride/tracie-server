@@ -1,52 +1,215 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import QRCode from 'react-qr-code';
-// import bleno from 'bleno';
-
-// bleno.on("stateChange", function (state) {
-//   console.log(state);
-// });
-
-electron.onNavigate((page) => {
-  window.location.href = page;
-});
-
-// function ConnectToBluetooth() {
-//   var name = 'name';
-//   var serviceUuids = ['B370'];
-
-//   // send start advertising command
-//   electron.startAdvertising(name, serviceUuids);
-//   // bleno.startAdvertising(name, serviceUuids);
-//   // navigator.bluetooth
-//   //   .requestDevice({
-//   //     acceptAllDevices: true,
-//   //     // filters: [{ services: ["battery_service"]}]
-//   //   })
-//   //   .then((device) => {
-//   //     console.log('Got device:', device.name);
-//   //   });
-// }
-
-// function startAdvertising() {
-//   navigator.bluetooth
-//     .requestLEScan({
-//       acceptAllAdvertisements: true,
-//     })
-//     .then(() => {
-//       console.log('Scanning');
-//     });
-// }
+import { MotionConfig, motion, useAnimation } from 'motion/react';
+import Logo from '../components/Logo/Logo';
+import { useEffect, useState } from 'react';
 
 function Hello() {
+  const [usbConnected, setUsbConnected] = useState(false);
+  const [appConnected, setAppConnected] = useState(false);
+  const [fadeToBlack, setFadeToBlack] = useState(false);
+
+  const controls = useAnimation();
+
+  const handleUSBConnection = () => {
+    setUsbConnected(!usbConnected);
+  };
+
+  const handleAppConnection = () => {
+    setAppConnected(!appConnected);
+  };
+
+  const handleFadeToBlack = () => {
+    setFadeToBlack(true);
+  };
+
+  useEffect(() => {
+    if (usbConnected && appConnected) {
+      controls.start('blastOff');
+      handleFadeToBlack();
+    } else if (!usbConnected && !appConnected) {
+      controls.start('idle');
+    }
+  }, [usbConnected, appConnected, controls]);
+
+  const rocketVariants = {
+    idle: {
+      y: [0, -100, 0],
+      transition: {
+        type: 'inertia',
+        velocity: 50,
+        repeat: Infinity,
+        duration: 2,
+        repeatType: 'reverse',
+      },
+    },
+    blastOff: {
+      y: -1000,
+      transition: {
+        type: 'spring',
+        stiffness: 100,
+        damping: 100,
+      },
+    },
+  };
+
   return (
-    <div>
-      <h1 className='bg-gray-500 text-center text-white text-6xl'>TRACIE SERVER</h1>
-      <div className="mx-auto text-lg">TRACIE server is running</div>
-      <QRCode value="hey" />
-      
-      {/* <button onClick={ConnectToBluetooth}>Connect to Bluetooth</button> */}
-    </div>
+    <>
+      <Logo />
+      <div className="flex justify-center items-center min-h-96 w-full mt-4">
+        <motion.div
+          className="flex justify-center items-center min-h-96 w-full mt-4"
+          initial={{ opacity: 1 }}
+          animate={{ opacity: fadeToBlack ? 0 : 1 }}
+          transition={{ duration: 1 }}
+        >
+          <MotionConfig
+            transition={{
+              type: 'spring',
+              damping: 20,
+              stiffness: 100,
+            }}
+          >
+            <motion.div
+              className="rounded-full bg-black p-4 h-80 w-80 flex justify-center items-center"
+              whileHover={{ scale: 0.9, backgroundPosition: '100% 50%' }}
+              style={{
+                background:
+                  'linear-gradient(45deg, #ff6b6b, #f06595, #cc5de8, #845ef7, #5c7cfa, #339af0, #22b8cf, #20c997, #51cf66, #94d82d, #fcc419, #ff922b)',
+                backgroundSize: '300% 300%',
+                transition: 'background-position 0.5s ease',
+              }}
+              // animate={{ width: usbConnected && appConnected ? undefined : 80, height: usbConnected && appConnected ? undefined : 80 }}
+            >
+              <motion.div
+                className="text-9xl flex justify-center items-center"
+                variants={rocketVariants}
+                animate={controls}
+                initial="idle"
+              >
+                🚀
+              </motion.div>
+            </motion.div>
+          </MotionConfig>
+        </motion.div>
+      </div>
+      <motion.div
+        className="flex justify-center items-center"
+        initial={{ opacity: 1 }}
+        animate={{ opacity: fadeToBlack ? 0 : 1 }}
+        transition={{ duration: 1 }}
+      >
+        <div className="flex justify-center items-center">
+          <motion.p
+            initial={{ opacity: 0, y: -20 }}
+            animate={{
+              opacity: usbConnected ? 1 : 0,
+              y: usbConnected ? 0 : -20,
+            }}
+            transition={{ duration: 0.5 }}
+            className="text-green-500"
+          >
+            USB Connected!
+          </motion.p>
+        </div>
+        </motion.div>
+        <motion.div
+        className="flex justify-center items-center"
+        initial={{ opacity: 1 }}
+        animate={{ opacity: fadeToBlack ? 0 : 1 }}
+        transition={{ duration: 1 }}
+      >
+        <div className="flex justify-center items-center">
+          <motion.p
+            initial={{ opacity: 1, y: 0 }}
+            animate={{
+              opacity: usbConnected ? 0 : 1,
+              y: usbConnected ? 20 : 0,
+            }}
+            transition={{ duration: 0.5 }}
+            className="text-red-500"
+          >
+            Waiting for USB connection...
+          </motion.p>
+        </div>
+        </motion.div>
+        <motion.div
+        className="flex justify-center items-center"
+        initial={{ opacity: 1 }}
+        animate={{ opacity: fadeToBlack ? 0 : 1 }}
+        transition={{ duration: 1 }}
+      >
+        <div className="flex justify-center items-center">
+          <motion.p
+            initial={{ opacity: 0, y: -20 }}
+            animate={{
+              opacity: appConnected ? 1 : 0,
+              y: appConnected ? 0 : -20,
+            }}
+            transition={{ duration: 0.5 }}
+            className="text-green-500"
+          >
+            APP Connected!
+          </motion.p>
+        </div>
+        </motion.div>
+        <motion.div
+        className="flex justify-center items-center"
+        initial={{ opacity: 1 }}
+        animate={{ opacity: fadeToBlack ? 0 : 1 }}
+        transition={{ duration: 1 }}
+      >
+        <div className="flex justify-center items-center">
+          <motion.p
+            initial={{ opacity: 1, y: 0 }}
+            animate={{
+              opacity: appConnected ? 0 : 1,
+              y: appConnected ? 20 : 0,
+            }}
+            transition={{ duration: 0.5 }}
+            className="text-red-500"
+          >
+            Waiting for APP connection...
+          </motion.p>
+        </div>
+      </motion.div>
+      {/* <button
+        onClick={handleUSBConnection}
+        className="mt-4 p-2 bg-blue-500 text-white rounded"
+      >
+        Simulate USB Connection
+      </button>
+      <button
+        onClick={handleAppConnection}
+        className="mt-4 p-2 bg-blue-500 text-white rounded"
+      >
+        Simulate APP Connection
+      </button> */}
+      {/* <button
+        onClick={handleFadeToBlack}
+        className="mt-4 p-2 bg-black text-white rounded"
+      >
+        Fade to Black
+      </button> */}
+      <div className="starry-night">
+        {[...Array(100)].map((_, i) => (
+          <div
+            key={i}
+            className="star"
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+            }}
+          />
+        ))}
+      </div>
+      {/* <div className="flex justify-center items-center">
+        <p>Waiting for USB connection...</p>
+      </div>
+      <div className="flex justify-center items-center">
+        <p>Waiting for APP connection...</p>
+      </div> */}
+    </>
   );
 }
 
