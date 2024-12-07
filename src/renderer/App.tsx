@@ -11,22 +11,22 @@ electron.onNavigate((page) => {
   window.location.href = page;
 });
 
-function ConnectToBluetooth() {
-  var name = 'name';
-  var serviceUuids = ['B370'];
+// function ConnectToBluetooth() {
+//   var name = 'name';
+//   var serviceUuids = ['B370'];
 
-  // send start advertising command
-  electron.startAdvertising(name, serviceUuids);
-  // bleno.startAdvertising(name, serviceUuids);
-  // navigator.bluetooth
-  //   .requestDevice({
-  //     acceptAllDevices: true,
-  //     // filters: [{ services: ["battery_service"]}]
-  //   })
-  //   .then((device) => {
-  //     console.log('Got device:', device.name);
-  //   });
-}
+//   // send start advertising command
+//   electron.startAdvertising(name, serviceUuids);
+//   // bleno.startAdvertising(name, serviceUuids);
+//   // navigator.bluetooth
+//   //   .requestDevice({
+//   //     acceptAllDevices: true,
+//   //     // filters: [{ services: ["battery_service"]}]
+//   //   })
+//   //   .then((device) => {
+//   //     console.log('Got device:', device.name);
+//   //   });
+// }
 
 // function startAdvertising() {
 //   navigator.bluetooth
@@ -41,10 +41,11 @@ function ConnectToBluetooth() {
 function Hello() {
   return (
     <div>
-      <h1>TRACIE SERVER</h1>
-      <div className="Hello">TRACIE server is running</div>
+      <h1 className='bg-gray-500 text-center text-white text-6xl'>TRACIE SERVER</h1>
+      <div className="mx-auto text-lg">TRACIE server is running</div>
       <QRCode value="hey" />
-      <button onClick={ConnectToBluetooth}>Connect to Bluetooth</button>
+      
+      {/* <button onClick={ConnectToBluetooth}>Connect to Bluetooth</button> */}
     </div>
   );
 }

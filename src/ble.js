@@ -15,9 +15,18 @@ class NavigateCharacteristic extends bleno.Characteristic {
   }
 
   onWriteRequest(data, _offset, _withoutResponse, callback) {
+    console.log("INCOMING DATA");
     const page = data.toString();
-    BLEEvent.emit('navigate', page);
+    // BLEEvent.emit('navigate', page);
+    console.log(page);
     callback(this.RESULT_SUCCESS);
+  }
+
+  onReadRequest(_offset, callback) {
+    console.log("READ REQUEST");
+    const data = Buffer.from('hello world :)');
+
+    callback(this.RESULT_SUCCESS, data.slice(_offset));
   }
 }
 
@@ -38,4 +47,8 @@ bleno.on('advertisingStart', (error) => {
       }),
     ]);
   }
+});
+
+bleno.on("accept", (clientAddress) => {
+  console.log(`Accepted connection from ${clientAddress}`);
 });
