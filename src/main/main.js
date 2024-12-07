@@ -89,7 +89,11 @@ const createWindow = async () => {
 
   ipcMain.on("start-advertising", (page, name, serviceUuids, callback) => {
     console.log(name, serviceUuids, callback);
+    try {
     bleno.startAdvertising(name, serviceUuids, callback);
+    } catch (e) {
+      console.error(e);
+    }
   });
 
   BLEEvent.on("navigate", (page) => {

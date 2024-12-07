@@ -13,7 +13,7 @@ electron.onNavigate((page) => {
 
 function ConnectToBluetooth() {
   var name = 'name';
-  var serviceUuids = ['2a37'];
+  var serviceUuids = ['B370'];
 
   // send start advertising command
   electron.startAdvertising(name, serviceUuids);
