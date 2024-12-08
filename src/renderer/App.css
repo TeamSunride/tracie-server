@@ -54,6 +54,18 @@ body {
   z-index: -1;
 }
 
+.milky-way {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 70%),
+              radial-gradient(circle at 60% 60%, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0) 80%);
+  opacity: 0.5;
+  animation: moveGalaxy 60s linear infinite;
+}
+
 .star {
   position: absolute;
   width: 2px;
@@ -63,12 +75,48 @@ body {
   animation: twinkle 1.5s infinite ease-in-out;
 }
 
+.shooting-star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 10px white;
+}
+
+.comet {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 10px white;
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.8;
+}
+
 @keyframes twinkle {
   0%, 100% {
     opacity: 0.5;
   }
   50% {
     opacity: 1;
+  }
+}
+
+@keyframes moveGalaxy {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
   }
 }
 /*

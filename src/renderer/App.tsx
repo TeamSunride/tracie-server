@@ -2,7 +2,8 @@ import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import { MotionConfig, motion, useAnimation } from 'motion/react';
 import Logo from '../components/Logo/Logo';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import StarryNight from '../components/StarryNight/StarryNight';
 
 function Hello() {
   const [usbConnected, setUsbConnected] = useState(false);
@@ -25,10 +26,15 @@ function Hello() {
 
   useEffect(() => {
     if (usbConnected && appConnected) {
+      controls.stop();
       controls.start('blastOff');
       handleFadeToBlack();
     } else if (!usbConnected && !appConnected) {
+      controls.stop();
       controls.start('idle');
+    } else if ((usbConnected && !appConnected) || (!usbConnected && appConnected)) {
+      controls.stop();
+      controls.start('shake');
     }
   }, [usbConnected, appConnected, controls]);
 
@@ -51,7 +57,18 @@ function Hello() {
         damping: 100,
       },
     },
+    shake: {
+      x: [0, -10, 10, -10, 10, -10, 10, 0],
+      transition: {
+        duration: 0.5,
+        repeat: Infinity,
+        repeatType: 'loop',
+        ease: 'linear',
+      },
+    },
   };
+
+  const starryBackground = useMemo(() => <StarryNight />, []);
 
   return (
     <>
@@ -112,8 +129,8 @@ function Hello() {
             USB Connected!
           </motion.p>
         </div>
-        </motion.div>
-        <motion.div
+      </motion.div>
+      <motion.div
         className="flex justify-center items-center"
         initial={{ opacity: 1 }}
         animate={{ opacity: fadeToBlack ? 0 : 1 }}
@@ -132,8 +149,8 @@ function Hello() {
             Waiting for USB connection...
           </motion.p>
         </div>
-        </motion.div>
-        <motion.div
+      </motion.div>
+      <motion.div
         className="flex justify-center items-center"
         initial={{ opacity: 1 }}
         animate={{ opacity: fadeToBlack ? 0 : 1 }}
@@ -152,8 +169,8 @@ function Hello() {
             APP Connected!
           </motion.p>
         </div>
-        </motion.div>
-        <motion.div
+      </motion.div>
+      <motion.div
         className="flex justify-center items-center"
         initial={{ opacity: 1 }}
         animate={{ opacity: fadeToBlack ? 0 : 1 }}
@@ -173,7 +190,7 @@ function Hello() {
           </motion.p>
         </div>
       </motion.div>
-      {/* <button
+      <button
         onClick={handleUSBConnection}
         className="mt-4 p-2 bg-blue-500 text-white rounded"
       >
@@ -184,25 +201,14 @@ function Hello() {
         className="mt-4 p-2 bg-blue-500 text-white rounded"
       >
         Simulate APP Connection
-      </button> */}
+      </button>
       {/* <button
         onClick={handleFadeToBlack}
         className="mt-4 p-2 bg-black text-white rounded"
       >
         Fade to Black
       </button> */}
-      <div className="starry-night">
-        {[...Array(100)].map((_, i) => (
-          <div
-            key={i}
-            className="star"
-            style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-            }}
-          />
-        ))}
-      </div>
+      {starryBackground}
       {/* <div className="flex justify-center items-center">
         <p>Waiting for USB connection...</p>
       </div>
