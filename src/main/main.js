@@ -92,14 +92,17 @@ const createWindow = async () => {
     (event, portList, webContents, callback) => {
       // Add listeners to handle ports being added or removed before the callback for `select-serial-port`
       // is called.
-      mainWindow.webContents.session.on('serial-port-added', (event, port) => {
-        console.log('serial-port-added FIRED WITH', port);
-        // Optionally update portList to add the new port
-      });
+      mainWindow.webContents.session.on(
+        'serial-port-added',
+        (addEvent, port) => {
+          console.log('serial-port-added FIRED WITH', port);
+          // Optionally update portList to add the new port
+        },
+      );
 
       mainWindow.webContents.session.on(
         'serial-port-removed',
-        (event, port) => {
+        (removeEvent, port) => {
           console.log('serial-port-removed FIRED WITH', port);
           // Optionally update portList to remove the port
         },
@@ -109,7 +112,6 @@ const createWindow = async () => {
       if (portList && portList.length > 0) {
         callback(portList[0].portId);
       } else {
-        // eslint-disable-next-line n/no-callback-literal
         callback(''); // Could not find any matching devices
       }
     },

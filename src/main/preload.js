@@ -1,5 +1,6 @@
 // Disable no-unused-vars, broken for spread args
 /* eslint no-unused-vars: off */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
 const electronHandler = {

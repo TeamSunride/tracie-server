@@ -22,7 +22,7 @@ export default function StarryNight() {
         duration: 2,
         repeat: Infinity,
         repeatDelay: 5,
-        delay: delay,
+        delay,
       },
     },
   });
@@ -58,11 +58,11 @@ export default function StarryNight() {
   return (
     <div className="starry-night">
       <div className="milky-way" />
-      {[...Array(300)].map((_, i) => {
+      {[...Array(300)].map(() => {
         const delay = Math.random() * 2; // Random delay between 0 and 2 seconds
         return (
           <div
-            key={i}
+            key={Math.random().toString(36).slice(2, 9)}
             className="star"
             style={{
               top: `${Math.random() * 100}%`,
@@ -72,12 +72,12 @@ export default function StarryNight() {
           />
         );
       })}
-      {[...Array(5)].map((_, i) => {
+      {[...Array(5)].map(() => {
         const { startX, startY, endX, endY } = generateRandomPosition();
         const delay = generateRandomDelay();
         return (
           <motion.div
-            key={i}
+            key={Math.random().toString(36).slice(2, 9)}
             className="particles"
             initial="initial"
             animate="animate"
@@ -96,7 +96,7 @@ export default function StarryNight() {
           >
             {[...Array(10)].map((_, j) => (
               <motion.div
-                key={j}
+                key={Math.random().toString(36).slice(2, 9)}
                 className="particle"
                 variants={particleVariants(
                   0,
@@ -112,9 +112,9 @@ export default function StarryNight() {
           </motion.div>
         );
       })}
-      {[...Array(3)].map((_, i) => (
+      {[...Array(3)].map(() => (
         <motion.div
-          key={i}
+          key={Math.random().toString(36).slice(2, 9)}
           className="comet"
           variants={cometVariants}
           initial="initial"

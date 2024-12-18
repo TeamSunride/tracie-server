@@ -3,7 +3,6 @@ import {
   Routes,
   Route,
   Outlet,
-  Link,
 } from 'react-router-dom';
 import './App.css';
 import { MotionConfig, motion, useAnimation } from 'motion/react';
@@ -44,7 +43,8 @@ function Hello() {
   }, [usbConnected, appConnected, controls]);
 
   useEffect(() => {
-    window.electron.onReadRequest((callbackId) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    window.electron.onReadRequest((callbackId: string) => {
       // used to detect when the app is connected
       setAppConnected(true);
       console.log('Read request received from main process, app connected');
@@ -62,7 +62,7 @@ function Hello() {
         velocity: 50,
         repeat: Infinity,
         duration: 2,
-        repeatType: 'reverse',
+        repeatType: 'reverse' as const,
       },
     },
     blastOff: {
@@ -78,7 +78,7 @@ function Hello() {
       transition: {
         duration: 0.5,
         repeat: Infinity,
-        repeatType: 'loop',
+        repeatType: 'loop' as const,
         ease: 'linear',
       },
     },
