@@ -15,7 +15,7 @@
     "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts"
   },
   "dependencies": {
-    "bleno": "npm:@abandonware/bleno@^0.6.1",
-    "sqlite3": "^5.1.7"
+    "better-sqlite3": "^11.7.0",
+    "bleno": "npm:@abandonware/bleno@^0.6.1"
   }
 }
