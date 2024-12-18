@@ -75,7 +75,7 @@ function Hello() {
 
   return (
     <div className="flex flex-col">
-      <div className='flex'>
+      <div className="flex">
         <motion.div
           className="flex justify-center items-center min-h-96 w-full mt-4"
           initial={{ opacity: 1 }}
@@ -98,7 +98,6 @@ function Hello() {
                 backgroundSize: '300% 300%',
                 transition: 'background-position 0.5s ease',
               }}
-              // animate={{ width: usbConnected && appConnected ? undefined : 80, height: usbConnected && appConnected ? undefined : 80 }}
             >
               <motion.div
                 className="text-9xl flex justify-center items-center"
@@ -112,7 +111,7 @@ function Hello() {
           </MotionConfig>
         </motion.div>
       </div>
-      <div className='flex'>
+      <div className="flex">
         <motion.div
           className="flex justify-center items-center"
           initial={{ opacity: 1 }}
@@ -194,40 +193,6 @@ function Hello() {
           </div>
         </motion.div>
       </div>
-      {/* <button
-        onClick={handleUSBConnection}
-        className="mt-4 p-2 bg-blue-500 text-white rounded"
-        type="button"
-      >
-        Simulate USB Connection
-      </button>
-      <button
-        onClick={handleAppConnection}
-        className="mt-4 p-2 bg-blue-500 text-white rounded"
-        type="button"
-      >
-        Simulate APP Connection
-      </button>
-      <Link to="connected">
-        <button
-          className="mt-4 p-2 bg-blue-500 text-white rounded"
-          type="button"
-        >
-          Connected
-        </button>
-      </Link> */}
-      {/* <button
-        onClick={handleFadeToBlack}
-        className="mt-4 p-2 bg-black text-white rounded"
-      >
-        Fade to Black
-      </button> */}
-      {/* <div className="flex justify-center items-center">
-        <p>Waiting for USB connection...</p>
-      </div>
-      <div className="flex justify-center items-center">
-        <p>Waiting for APP connection...</p>
-      </div> */}
     </div>
   );
 }
