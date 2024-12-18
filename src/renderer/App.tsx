@@ -43,6 +43,17 @@ function Hello() {
     }
   }, [usbConnected, appConnected, controls]);
 
+  useEffect(() => {
+    window.electron.onReadRequest((callbackId) => {
+      // used to detect when the app is connected
+      setAppConnected(true);
+      console.log('Read request received from main process, app connected');
+      // we don't actually respond to the read request, the main process does
+      // but for future reference, this is how you would respond
+      // window.electron.invokeBleReadRequestCallback(callbackId, 'Hello from renderer');
+    });
+  }, []);
+
   const rocketVariants = {
     idle: {
       y: [0, -100, 0],
