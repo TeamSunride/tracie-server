@@ -28,7 +28,9 @@ export default class UnscentedKalmanFilter {
 
   private previousAltitude: number | null = null;
 
-  private previousTime: number | null = null;
+  private previousTimePredictMilliseconds: number | null = null;
+
+  private previousTimeUpdateMilliseconds: number | null = null;
 
   constructor() {
     this.stateDimension = 13;
@@ -55,7 +57,15 @@ export default class UnscentedKalmanFilter {
     this.measurementNoise = createDiagonalMatrix(this.measurementDimension, 5); // 5, GPS noise
   }
 
-  public predict(dt: number): void {
+  public predict(newTimeMilliseconds: number): void {
+    if (this.previousTimePredictMilliseconds === null) {
+      this.previousTimePredictMilliseconds = newTimeMilliseconds;
+      return;
+    }
+
+    const dt =
+      (newTimeMilliseconds - this.previousTimePredictMilliseconds) / 1000;
+
     // position update
     this.state[0] += this.state[3] * dt + 0.5 * this.state[6] * dt * dt; // x
     this.state[1] += this.state[4] * dt + 0.5 * this.state[7] * dt * dt; // y
@@ -82,15 +92,16 @@ export default class UnscentedKalmanFilter {
     longitude: number,
     latitude: number,
     altitude: number,
-    currentTime: number,
+    currentTimeMilliseconds: number,
   ): void {
     if (
       this.previousLongitude !== null &&
       this.previousLatitude !== null &&
       this.previousAltitude !== null &&
-      this.previousTime !== null
+      this.previousTimeUpdateMilliseconds !== null
     ) {
-      const deltaTime = (currentTime - this.previousTime) / 1000; // Convert to seconds
+      const deltaTime =
+        (currentTimeMilliseconds - this.previousTimeUpdateMilliseconds) / 1000; // Convert to seconds
 
       // Calculate distances
       const { dx, dy } = haversineDistance(
@@ -135,7 +146,7 @@ export default class UnscentedKalmanFilter {
     this.previousLongitude = longitude;
     this.previousLatitude = latitude;
     this.previousAltitude = altitude;
-    this.previousTime = currentTime;
+    this.previousTimeUpdateMilliseconds = currentTimeMilliseconds;
   }
 
   private computeKalmanGain(): number[][] {
