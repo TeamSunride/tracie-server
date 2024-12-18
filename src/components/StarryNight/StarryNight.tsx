@@ -98,13 +98,7 @@ export default function StarryNight() {
               <motion.div
                 key={Math.random().toString(36).slice(2, 9)}
                 className="particle"
-                variants={particleVariants(
-                  0,
-                  0,
-                  endX,
-                  endY,
-                  delay + j * 0.1,
-                )}
+                variants={particleVariants(0, 0, endX, endY, delay + j * 0.1)}
                 initial="initial"
                 animate="animate"
               />
