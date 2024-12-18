@@ -1,8 +1,14 @@
-import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
+import {
+  MemoryRouter as Router,
+  Routes,
+  Route,
+  Outlet,
+  Link,
+} from 'react-router-dom';
 import './App.css';
 import { MotionConfig, motion, useAnimation } from 'motion/react';
-import Logo from '../components/Logo/Logo';
 import { useEffect, useMemo, useState } from 'react';
+import Logo from '../components/Logo/Logo';
 import StarryNight from '../components/StarryNight/StarryNight';
 
 function Hello() {
@@ -14,10 +20,6 @@ function Hello() {
 
   const handleUSBConnection = () => {
     setUsbConnected(!usbConnected);
-  };
-
-  const handleAppConnection = () => {
-    setAppConnected(!appConnected);
   };
 
   const handleFadeToBlack = () => {
@@ -32,7 +34,10 @@ function Hello() {
     } else if (!usbConnected && !appConnected) {
       controls.stop();
       controls.start('idle');
-    } else if ((usbConnected && !appConnected) || (!usbConnected && appConnected)) {
+    } else if (
+      (usbConnected && !appConnected) ||
+      (!usbConnected && appConnected)
+    ) {
       controls.stop();
       controls.start('shake');
     }
@@ -68,12 +73,9 @@ function Hello() {
     },
   };
 
-  const starryBackground = useMemo(() => <StarryNight />, []);
-
   return (
-    <>
-      <Logo />
-      <div className="flex justify-center items-center min-h-96 w-full mt-4">
+    <div className="flex flex-col">
+      <div className='flex'>
         <motion.div
           className="flex justify-center items-center min-h-96 w-full mt-4"
           initial={{ opacity: 1 }}
@@ -110,111 +112,151 @@ function Hello() {
           </MotionConfig>
         </motion.div>
       </div>
-      <motion.div
-        className="flex justify-center items-center"
-        initial={{ opacity: 1 }}
-        animate={{ opacity: fadeToBlack ? 0 : 1 }}
-        transition={{ duration: 1 }}
-      >
-        <div className="flex justify-center items-center">
-          <motion.p
-            initial={{ opacity: 0, y: -20 }}
-            animate={{
-              opacity: usbConnected ? 1 : 0,
-              y: usbConnected ? 0 : -20,
-            }}
-            transition={{ duration: 0.5 }}
-            className="text-green-500"
-          >
-            USB Connected!
-          </motion.p>
-        </div>
-      </motion.div>
-      <motion.div
-        className="flex justify-center items-center"
-        initial={{ opacity: 1 }}
-        animate={{ opacity: fadeToBlack ? 0 : 1 }}
-        transition={{ duration: 1 }}
-      >
-        <div className="flex justify-center items-center">
-          <motion.p
-            initial={{ opacity: 1, y: 0 }}
-            animate={{
-              opacity: usbConnected ? 0 : 1,
-              y: usbConnected ? 20 : 0,
-            }}
-            transition={{ duration: 0.5 }}
-            className="text-red-500"
-          >
-            Waiting for USB connection...
-          </motion.p>
-        </div>
-      </motion.div>
-      <motion.div
-        className="flex justify-center items-center"
-        initial={{ opacity: 1 }}
-        animate={{ opacity: fadeToBlack ? 0 : 1 }}
-        transition={{ duration: 1 }}
-      >
-        <div className="flex justify-center items-center">
-          <motion.p
-            initial={{ opacity: 0, y: -20 }}
-            animate={{
-              opacity: appConnected ? 1 : 0,
-              y: appConnected ? 0 : -20,
-            }}
-            transition={{ duration: 0.5 }}
-            className="text-green-500"
-          >
-            APP Connected!
-          </motion.p>
-        </div>
-      </motion.div>
-      <motion.div
-        className="flex justify-center items-center"
-        initial={{ opacity: 1 }}
-        animate={{ opacity: fadeToBlack ? 0 : 1 }}
-        transition={{ duration: 1 }}
-      >
-        <div className="flex justify-center items-center">
-          <motion.p
-            initial={{ opacity: 1, y: 0 }}
-            animate={{
-              opacity: appConnected ? 0 : 1,
-              y: appConnected ? 20 : 0,
-            }}
-            transition={{ duration: 0.5 }}
-            className="text-red-500"
-          >
-            Waiting for APP connection...
-          </motion.p>
-        </div>
-      </motion.div>
-      <button
+      <div className='flex'>
+        <motion.div
+          className="flex justify-center items-center"
+          initial={{ opacity: 1 }}
+          animate={{ opacity: fadeToBlack ? 0 : 1 }}
+          transition={{ duration: 1 }}
+        >
+          <div className="flex justify-center items-center">
+            <motion.p
+              initial={{ opacity: 0, y: -20 }}
+              animate={{
+                opacity: usbConnected ? 1 : 0,
+                y: usbConnected ? 0 : -20,
+              }}
+              transition={{ duration: 0.5 }}
+              className="text-green-500"
+            >
+              USB Connected!
+            </motion.p>
+          </div>
+        </motion.div>
+        <motion.div
+          className="flex justify-center items-center"
+          initial={{ opacity: 1 }}
+          animate={{ opacity: fadeToBlack ? 0 : 1 }}
+          transition={{ duration: 1 }}
+        >
+          <div className="flex justify-center items-center">
+            <motion.p
+              initial={{ opacity: 1, y: 0 }}
+              animate={{
+                opacity: usbConnected ? 0 : 1,
+                y: usbConnected ? 20 : 0,
+              }}
+              transition={{ duration: 0.5 }}
+              className="text-red-500"
+            >
+              Waiting for USB connection...
+            </motion.p>
+          </div>
+        </motion.div>
+        <motion.div
+          className="flex justify-center items-center"
+          initial={{ opacity: 1 }}
+          animate={{ opacity: fadeToBlack ? 0 : 1 }}
+          transition={{ duration: 1 }}
+        >
+          <div className="flex justify-center items-center">
+            <motion.p
+              initial={{ opacity: 0, y: -20 }}
+              animate={{
+                opacity: appConnected ? 1 : 0,
+                y: appConnected ? 0 : -20,
+              }}
+              transition={{ duration: 0.5 }}
+              className="text-green-500"
+            >
+              APP Connected!
+            </motion.p>
+          </div>
+        </motion.div>
+        <motion.div
+          className="flex justify-center items-center"
+          initial={{ opacity: 1 }}
+          animate={{ opacity: fadeToBlack ? 0 : 1 }}
+          transition={{ duration: 1 }}
+        >
+          <div className="flex justify-center items-center">
+            <motion.p
+              initial={{ opacity: 1, y: 0 }}
+              animate={{
+                opacity: appConnected ? 0 : 1,
+                y: appConnected ? 20 : 0,
+              }}
+              transition={{ duration: 0.5 }}
+              className="text-red-500"
+            >
+              Waiting for APP connection...
+            </motion.p>
+          </div>
+        </motion.div>
+      </div>
+      {/* <button
         onClick={handleUSBConnection}
         className="mt-4 p-2 bg-blue-500 text-white rounded"
+        type="button"
       >
         Simulate USB Connection
       </button>
       <button
         onClick={handleAppConnection}
         className="mt-4 p-2 bg-blue-500 text-white rounded"
+        type="button"
       >
         Simulate APP Connection
       </button>
+      <Link to="connected">
+        <button
+          className="mt-4 p-2 bg-blue-500 text-white rounded"
+          type="button"
+        >
+          Connected
+        </button>
+      </Link> */}
       {/* <button
         onClick={handleFadeToBlack}
         className="mt-4 p-2 bg-black text-white rounded"
       >
         Fade to Black
       </button> */}
-      {starryBackground}
       {/* <div className="flex justify-center items-center">
         <p>Waiting for USB connection...</p>
       </div>
       <div className="flex justify-center items-center">
         <p>Waiting for APP connection...</p>
       </div> */}
+    </div>
+  );
+}
+
+function Layout() {
+  const starryBackground = useMemo(() => <StarryNight />, []);
+
+  return (
+    <>
+      <Logo />
+      <div className="flex justify-center items-center min-h-96 w-full mt-4">
+        <Outlet />
+      </div>
+      {starryBackground}
+    </>
+  );
+}
+
+function Connected() {
+  return <p className="text-3xl">Connected!</p>;
+}
+
+function NoPage() {
+  return (
+    <>
+      <p className="text-3xl">404 Not Found</p>
+      <p className="text-3xl">¯\_(ツ)_/¯</p>
+      <p className="text-3xl">How did you even get here</p>
+      <p className="text-3xl">get out</p>
     </>
   );
 }
@@ -223,7 +265,11 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Hello />} />
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Hello />} />
+          <Route path="connected" element={<Connected />} />
+          <Route path="*" element={<NoPage />} />
+        </Route>
       </Routes>
     </Router>
   );
