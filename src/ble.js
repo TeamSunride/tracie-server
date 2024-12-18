@@ -3,7 +3,7 @@ import { EventEmitter } from 'events';
 
 export const BLEEvent = new EventEmitter();
 
-const serviceId = 'B370';
+export const serviceId = 'B370';
 
 class NavigateCharacteristic extends bleno.Characteristic {
   constructor() {
@@ -15,18 +15,16 @@ class NavigateCharacteristic extends bleno.Characteristic {
   }
 
   onWriteRequest(data, _offset, _withoutResponse, callback) {
-    console.log("INCOMING DATA");
-    const page = data.toString();
-    // BLEEvent.emit('navigate', page);
-    console.log(page);
+    console.info('BLE WRITE REQUEST');
     callback(this.RESULT_SUCCESS);
   }
 
   onReadRequest(_offset, callback) {
-    console.log("READ REQUEST");
-    const data = Buffer.from('hello world :)');
-
-    callback(this.RESULT_SUCCESS, data.slice(_offset));
+    console.info('BLE READ REQUEST');
+    BLEEvent.emit('readRequest', (text) => {
+      const data = Buffer.from(text);
+      callback(this.RESULT_SUCCESS, data.slice(_offset));
+    });
   }
 }
 
@@ -49,6 +47,8 @@ bleno.on('advertisingStart', (error) => {
   }
 });
 
-bleno.on("accept", (clientAddress) => {
-  console.log(`Accepted connection from ${clientAddress}`);
-});
+// this is not useful, since it doesn't work on macOS, we instead detect connections by listening for read requests
+// bleno.on('accept', (clientAddress) => {
+//   console.log(`Accepted connection from ${clientAddress}`);
+//   BLEEvent.emit('acceptConnection', clientAddress);
+// });

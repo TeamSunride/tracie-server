@@ -19,30 +19,14 @@ const electronHandler = {
       ipcRenderer.once(channel, (_event, ...args) => func(...args));
     },
   },
-  cancelBluetoothRequest: () => ipcRenderer.send('cancel-bluetooth-request'),
-  bluetoothPairingRequest: (callback) =>
-    ipcRenderer.on('bluetooth-pairing-request', () => callback()),
-  bluetoothPairingResponse: (response) =>
-    ipcRenderer.send('bluetooth-pairing-response', response),
-  startAdvertising: (name, serviceUuids, callback) => ipcRenderer.send('start-advertising', name, serviceUuids, callback),
-  onNavigate: (callback) => {
+  onReadRequest: (callback) => {
     const subscription = (_event, ...args) => callback(...args);
-    ipcRenderer.on('navigate', subscription);
+    ipcRenderer.on('ble-read-request', subscription);
   },
-  // bleno: {
-  //   startAdvertising: (name, serviceUuids, callback) => {
-  //     bleno.startAdvertising(name, serviceUuids, callback);
-  //   },
-  //   stopAdvertising: () => {
-  //     bleno.stopAdvertising();
-  //   },
-  //   setServices: (services) => {
-  //     bleno.setServices(services);
-  //   },
-  //   on: (event, callback) => {
-  //     bleno.on(event, callback);
-  //   },
-  // },
+  invokeBleReadRequestCallback: (callbackId, data) => {
+    // allows renderer to respond to a read request, although currently only the main process responds to read requests
+    ipcRenderer.send('invoke-ble-read-request-callback', callbackId, data);
+  },
 };
 
 contextBridge.exposeInMainWorld('electron', electronHandler);
