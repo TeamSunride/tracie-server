@@ -1,3 +1,5 @@
+import { RADIUS_OF_EARTH } from './constants';
+
 export function degToRad(deg: number): number {
   return deg * (Math.PI / 180);
 }
@@ -8,7 +10,7 @@ export function haversineDistance(
   lat2: number,
   lon2: number,
 ): { dx: number; dy: number } {
-  const R = 6371000; // Radius of the Earth in meters
+  const R = RADIUS_OF_EARTH; // Radius of the Earth in meters
   const dLat = degToRad(lat2 - lat1);
   const dLon = degToRad(lon2 - lon1);
   const a =
