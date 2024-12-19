@@ -54,10 +54,12 @@ function Hello() {
     });
 
     window.electron.onSerialPortConnected(() => {
+      console.log('Serial port connected');
       setUsbConnected(true);
     });
 
     window.electron.onSerialPortDisconnected(() => {
+      console.log('Serial port disconnected');
       setUsbConnected(false);
     });
   }, []);
