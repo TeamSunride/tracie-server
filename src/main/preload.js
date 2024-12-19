@@ -28,6 +28,14 @@ const electronHandler = {
     // allows renderer to respond to a read request, although currently only the main process responds to read requests
     ipcRenderer.send('invoke-ble-read-request-callback', callbackId, data);
   },
+  onSerialPortConnected: (callback) => {
+    const subscription = (_event, ...args) => callback(...args);
+    ipcRenderer.on('serial-port-connected', subscription);
+  },
+  onSerialPortDisconnected: (callback) => {
+    const subscription = (_event, ...args) => callback(...args);
+    ipcRenderer.on('serial-port-disconnected', subscription);
+  },
 };
 
 contextBridge.exposeInMainWorld('electron', electronHandler);

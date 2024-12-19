@@ -72,8 +72,7 @@
   },
   "dependencies": {
     "@electron/notarize": "^2.3.2",
-    "@react-three/drei": "^9.120.2",
-    "@react-three/fiber": "^8.17.10",
+    "@serialport/bindings-cpp": "^12.0.1",
     "buffer": "^6.0.3",
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.8",
@@ -84,7 +83,7 @@
     "react-dom": "^18.2.0",
     "react-qr-code": "^2.0.15",
     "react-router-dom": "^6.16.0",
-    "three": "^0.171.0",
+    "serialport": "^12.0.0",
     "url": "^0.11.4"
   },
   "devDependencies": {
@@ -100,6 +99,7 @@
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "@types/react-test-renderer": "^18.0.1",
+    "@types/serialport": "^8.0.5",
     "@types/webpack-bundle-analyzer": "^4.6.0",
     "@typescript-eslint/eslint-plugin": "^6.7.0",
     "@typescript-eslint/parser": "^6.7.0",

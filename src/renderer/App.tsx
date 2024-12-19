@@ -52,6 +52,14 @@ function Hello() {
       // but for future reference, this is how you would respond
       // window.electron.invokeBleReadRequestCallback(callbackId, 'Hello from renderer');
     });
+
+    window.electron.onSerialPortConnected(() => {
+      setUsbConnected(true);
+    });
+
+    window.electron.onSerialPortDisconnected(() => {
+      setUsbConnected(false);
+    });
   }, []);
 
   const rocketVariants = {

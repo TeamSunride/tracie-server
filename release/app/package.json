@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "better-sqlite3": "^11.7.0",
-    "bleno": "npm:@abandonware/bleno@^0.6.1"
+    "bleno": "npm:@abandonware/bleno@^0.6.1",
+    "serialport": "^12.0.0"
   }
 }

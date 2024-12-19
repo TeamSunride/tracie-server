@@ -13,6 +13,7 @@ import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import { randomUUID } from 'crypto';
+import { ReadlineParser } from 'serialport';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import { BLEEvent } from '../ble';
@@ -21,6 +22,8 @@ import {
   getDatapoints,
   getMostRecentDatapoint,
 } from '../database/runtime/datapointManager';
+import SerialPortManager from '../serial';
+import { parseRawData } from '../data';
 
 const bleReadRequestCallbacks = new Map();
 
@@ -87,35 +90,35 @@ const createWindow = async () => {
     titleBarStyle: 'hidden',
   });
 
-  mainWindow.webContents.session.on(
-    'select-serial-port',
-    (event, portList, webContents, callback) => {
-      // Add listeners to handle ports being added or removed before the callback for `select-serial-port`
-      // is called.
-      mainWindow.webContents.session.on(
-        'serial-port-added',
-        (addEvent, port) => {
-          console.log('serial-port-added FIRED WITH', port);
-          // Optionally update portList to add the new port
-        },
-      );
+  // mainWindow.webContents.session.on(
+  //   'select-serial-port',
+  //   (event, portList, webContents, callback) => {
+  //     // Add listeners to handle ports being added or removed before the callback for `select-serial-port`
+  //     // is called.
+  //     mainWindow.webContents.session.on(
+  //       'serial-port-added',
+  //       (addEvent, port) => {
+  //         console.log('serial-port-added FIRED WITH', port);
+  //         // Optionally update portList to add the new port
+  //       },
+  //     );
 
-      mainWindow.webContents.session.on(
-        'serial-port-removed',
-        (removeEvent, port) => {
-          console.log('serial-port-removed FIRED WITH', port);
-          // Optionally update portList to remove the port
-        },
-      );
+  //     mainWindow.webContents.session.on(
+  //       'serial-port-removed',
+  //       (removeEvent, port) => {
+  //         console.log('serial-port-removed FIRED WITH', port);
+  //         // Optionally update portList to remove the port
+  //       },
+  //     );
 
-      event.preventDefault();
-      if (portList && portList.length > 0) {
-        callback(portList[0].portId);
-      } else {
-        callback(''); // Could not find any matching devices
-      }
-    },
-  );
+  //     event.preventDefault();
+  //     if (portList && portList.length > 0) {
+  //       callback(portList[0].portId);
+  //     } else {
+  //       callback(''); // Could not find any matching devices
+  //     }
+  //   },
+  // );
 
   mainWindow.webContents.session.setPermissionCheckHandler(
     (webContents, permission, requestingOrigin, details) => {
@@ -192,6 +195,35 @@ const createWindow = async () => {
     const lastDatapoint = getMostRecentDatapoint();
     console.log(lastDatapoint);
   }, 1000);
+
+  const serialPortManager = new SerialPortManager();
+  serialPortManager.startSerialPortPolling();
+  serialPortManager.on('portAdded', (port) => {
+    console.log('PORT ADDED', port);
+    if (port.info.vendorId === '10c4' && port.info.productId === 'ea60') {
+      console.log('found device');
+      // serialPortManager.stopSerialPortPolling();
+      port.connect({
+        baudRate: 115200,
+      });
+      const parser = new ReadlineParser();
+      port.port.pipe(parser);
+      parser.on('data', (data) => {
+        console.log('DATA RECEIVED', data);
+        const parsed = parseRawData(data);
+        console.log('PARSED DATA', parsed);
+      });
+      mainWindow.webContents.send('serial-port-connected');
+    }
+  });
+  serialPortManager.on('portRemoved', (port) => {
+    console.log('PORT REMOVED', port);
+    if (port.info.vendorId === '10c4' && port.info.productId === 'ea60') {
+      console.log('device removed');
+      // serialPortManager.startSerialPortPolling();
+      mainWindow.webContents.send('serial-port-disconnected');
+    }
+  });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
