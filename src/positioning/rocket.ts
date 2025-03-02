@@ -23,6 +23,10 @@ export default class Rocket {
 
   public totalDistanceTraveled: number = 0; // in metres
 
+  public maxAltitude: number = 0;
+
+  public maxVerticalSpeed: number = 0;
+
   private kalmanFilter: UnscentedKalmanFilter;
 
   private lastGpsUpdateMilliseconds: number | undefined;
@@ -64,6 +68,14 @@ export default class Rocket {
 
     const { x, y, z, vx, vy, vz, ax, ay, az, pitch, yaw, pitchRate, yawRate } =
       this.kalmanFilter.getState();
+
+    if (z > this.maxAltitude) {
+      this.maxAltitude = z;
+    }
+
+    if (vz > this.maxVerticalSpeed) {
+      this.maxVerticalSpeed = vz;
+    }
 
     this.position = { x, y, z };
     this.velocity = { x: vx, y: vy, z: vz };
@@ -133,6 +145,27 @@ export default class Rocket {
     return {
       longitude: initialLongitude + deltaLongitude,
       latitude: initialLatitude + deltaLatitude,
+    };
+  }
+
+  public toJSON() {
+    return {
+      position: this.position,
+      velocity: this.velocity,
+      acceleration: this.acceleration,
+      orientation: this.orientation,
+      angularVelocity: this.angularVelocity,
+      altitude: this.getAltitude(),
+      speed: this.getSpeed(),
+      distanceTravelled: this.getDistanceTravelled(),
+      flightTime: this.getFlightTime(),
+      verticalSpeed: this.getVerticalSpeed(),
+      horizontalSpeed: this.getHorizontalSpeed(),
+      trajectoryAngle: this.getTrajectoryAngle(),
+      accelerationMagnitude: this.getAccelerationMagnitude(),
+      longitudeAndLatitude: this.getLongitudeAndLatitude(),
+      maxAltitude: this.maxAltitude,
+      maxVerticalSpeed: this.maxVerticalSpeed,
     };
   }
 }
