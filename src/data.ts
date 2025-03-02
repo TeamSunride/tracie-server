@@ -29,8 +29,9 @@
 //             print(e)
 
 export function parseRawData(rawData: string) {
-  if (rawData.startsWith('[DATA]:')) {
-    const splitData = rawData.split(':').pop().split(',');
+  const dataStartIndex = rawData.indexOf('[DATA]:');
+  if (dataStartIndex !== -1) {
+    const splitData = rawData.substring(dataStartIndex + 7).split(',');
     // latitude, longitude, altitude, fix, siv, max_altitude_m, rssi, snr, freqerr, radio_state
     const data = {
       latitude: parseFloat(splitData[0]),
