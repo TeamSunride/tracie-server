@@ -24,6 +24,7 @@ import {
 } from '../database/runtime/datapointManager';
 import SerialPortManager from '../serial';
 import { parseRawData } from '../data';
+import Rocket from '../positioning/rocket';
 
 const bleReadRequestCallbacks = new Map();
 
@@ -36,6 +37,8 @@ class AppUpdater {
 }
 
 let mainWindow = null;
+
+let rocketTracking = null;
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -114,6 +117,8 @@ const createWindow = async () => {
       bleReadRequestCallbacks.set(callbackId, callback);
       console.log('sending read request to renderer');
       mainWindow.webContents.send('ble-read-request', callbackId);
+      const data = JSON.stringify(rocketTracking);
+      ipcMain.emit('invoke-ble-read-request-callback', null, callbackId, data);
     }
   });
 
@@ -171,6 +176,7 @@ const createWindow = async () => {
     if (port.info.vendorId === '10c4' && port.info.productId === 'ea60') {
       console.log('found device');
       // serialPortManager.stopSerialPortPolling();
+      rocketTracking = new Rocket({});
       port.connect({
         baudRate: 115200,
       });
