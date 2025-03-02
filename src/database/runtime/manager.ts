@@ -15,7 +15,7 @@ db.exec(`
     altitude REAL,
     fix INTEGER,
     satellitesInView INTEGER,
-    timestampSeconds INTEGER,
+    timestampMilliseconds INTEGER,
     rssi REAL,
     snr REAL,
     freqErr REAL,

@@ -7,7 +7,7 @@ import db from './manager';
  * @param altitude The altitude of the datapoint
  * @param fix The fix of the datapoint
  * @param satellitesInView The number of satellites in view of the datapoint
- * @param timestampSeconds The timestamp of the datapoint (UNIX time in seconds)
+ * @param timestampMilliseconds The timestamp of the datapoint (UNIX time in milliseconds)
  * @param rssi The RSSI of the datapoint
  * @param snr The SNR of the datapoint
  * @param freqErr The frequency error of the datapoint
@@ -19,14 +19,14 @@ export function addDatapoint(
   altitude: number,
   fix: number,
   satellitesInView: number,
-  timestampSeconds: number,
+  timestampMilliseconds: number,
   rssi: number,
   snr: number,
   freqErr: number,
   radioState: number,
 ): void {
   const insertQuery = db.prepare(
-    `INSERT INTO datapoints (latitude, longitude, altitude, fix, satellitesInView, timestampSeconds, rssi, snr, freqErr, radioState) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO datapoints (latitude, longitude, altitude, fix, satellitesInView, timestampMilliseconds, rssi, snr, freqErr, radioState) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   );
 
   const transaction = db.transaction(() => {
@@ -36,7 +36,7 @@ export function addDatapoint(
       altitude,
       fix,
       satellitesInView,
-      timestampSeconds,
+      timestampMilliseconds,
       rssi,
       snr,
       freqErr,
@@ -57,7 +57,7 @@ export function addDatapoint(
  */
 export function getMostRecentDatapoint(): unknown {
   const query = db.prepare(
-    'SELECT * FROM datapoints ORDER BY timestampSeconds DESC LIMIT 1',
+    'SELECT * FROM datapoints ORDER BY timestampMilliseconds DESC LIMIT 1',
   );
   return query.get();
 }
@@ -65,7 +65,7 @@ export function getMostRecentDatapoint(): unknown {
 /**
  * Fetches datapoints from the database
  * @param options The options for the query
- * @param options.maxAge The maximum age of the datapoints to fetch in seconds, relative to the current time. e.g. 60 would fetch all datapoints from the last 60 seconds
+ * @param options.maxAge The maximum age of the datapoints to fetch in milliseconds, relative to the current time. e.g. 60 would fetch all datapoints from the last 60 seconds
  * @param options.limit The maximum number of datapoints to fetch
  * @returns The datapoints that match the query
  */
@@ -78,27 +78,27 @@ export function getDatapoints({
 } = {}): unknown[] {
   if (maxAge === undefined && limit !== undefined) {
     const query = db.prepare(
-      `SELECT * FROM datapoints ORDER BY timestampSeconds DESC LIMIT ${limit}`,
+      `SELECT * FROM datapoints ORDER BY timestampMilliseconds DESC LIMIT ${limit}`,
     );
     return query.all();
   }
   if (maxAge !== undefined && limit === undefined) {
     const query = db.prepare(
       // eslint-disable-next-line no-bitwise
-      `SELECT * FROM datapoints WHERE timestampSeconds > ${maxAge + ((Date.now() / 1000) | 0)} ORDER BY timestampSeconds DESC`,
+      `SELECT * FROM datapoints WHERE timestampMilliseconds > ${maxAge + Date.now()} ORDER BY timestampMilliseconds DESC`,
     );
     return query.all();
   }
   if (maxAge === undefined && limit === undefined) {
     const query = db.prepare(
-      'SELECT * FROM datapoints ORDER BY timestampSeconds DESC',
+      'SELECT * FROM datapoints ORDER BY timestampMilliseconds DESC',
     );
     return query.all();
   }
   if (maxAge !== undefined && limit !== undefined) {
     const query = db.prepare(
       // eslint-disable-next-line no-bitwise
-      `SELECT * FROM datapoints WHERE timestampSeconds > ${maxAge + ((Date.now() / 1000) | 0)} ORDER BY timestampSeconds DESC LIMIT ${limit}`,
+      `SELECT * FROM datapoints WHERE timestampMilliseconds > ${maxAge + Date.now()} ORDER BY timestampMilliseconds DESC LIMIT ${limit}`,
     );
     return query.all();
   }
