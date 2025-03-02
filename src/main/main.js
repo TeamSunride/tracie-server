@@ -184,8 +184,29 @@ const createWindow = async () => {
       port.port.pipe(parser);
       parser.on('data', (data) => {
         console.log('DATA RECEIVED', data);
-        const parsed = parseRawData(data);
-        console.log('PARSED DATA', parsed);
+        try {
+          const parsed = parseRawData(data);
+          console.log('PARSED DATA', parsed);
+          addDatapoint(
+            parsed.latitude,
+            parsed.longitude,
+            parsed.altitude,
+            parsed.fix,
+            parsed.siv,
+            Date.now(),
+            parsed.rssi,
+            parsed.snr,
+            parsed.freqError,
+            parsed.radioState,
+          );
+        } catch (error) {
+          console.error('error parsing data', error);
+        }
+      });
+      ipcMain.on('set-groundstation-channel', (event, channel) => {
+        console.log('SET GROUNDSTATION CHANNEL', channel);
+        // send data over serial port
+        port.port.write(channel === 1 ? "CHANNEL1" : "CHANNEL2");
       });
       mainWindow.webContents.send('serial-port-connected');
     }
