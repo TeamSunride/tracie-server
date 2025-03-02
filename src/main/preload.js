@@ -28,6 +28,9 @@ const electronHandler = {
     // allows renderer to respond to a read request, although currently only the main process responds to read requests
     ipcRenderer.send('invoke-ble-read-request-callback', callbackId, data);
   },
+  setGroundstationChannel: (channel) => {
+    ipcRenderer.send('set-groundstation-channel', channel);
+  },
   onSerialPortConnected: (callback) => {
     const subscription = (_event, ...args) => callback(...args);
     ipcRenderer.on('serial-port-connected', subscription);

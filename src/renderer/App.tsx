@@ -14,6 +14,7 @@ function Hello() {
   const [usbConnected, setUsbConnected] = useState(false);
   const [appConnected, setAppConnected] = useState(false);
   const [fadeToBlack, setFadeToBlack] = useState(false);
+  const [channel, setChannel] = useState(1);
 
   const controls = useAnimation();
 
@@ -23,6 +24,10 @@ function Hello() {
 
   const handleFadeToBlack = () => {
     setFadeToBlack(true);
+  };
+
+  const handleChannelToggle = () => {
+    setChannel((prevChannel) => (prevChannel === 1 ? 2 : 1));
   };
 
   useEffect(() => {
@@ -63,6 +68,10 @@ function Hello() {
       setUsbConnected(false);
     });
   }, []);
+
+  useEffect(() => {
+    window.electron.setGroundstationChannel(channel);
+  }, [channel]);
 
   const rocketVariants = {
     idle: {
@@ -213,6 +222,26 @@ function Hello() {
             </motion.p>
           </div>
         </motion.div>
+      </div>
+      <div className="flex justify-center items-center mt-4">
+        <label className="flex items-center cursor-pointer">
+          <div className={`mr-3 font-medium ${channel === 1 ? 'text-white' : 'text-gray-400'}`}>Channel 1</div>
+          <div className="relative">
+        <input
+          type="checkbox"
+          className="sr-only"
+          checked={channel === 2}
+          onChange={handleChannelToggle}
+        />
+        <div className="block bg-gray-600 w-14 h-8 rounded-full"></div>
+        <div
+          className={`dot absolute left-1 top-1 bg-gray-300 w-6 h-6 rounded-full transition ${
+        channel === 2 ? 'transform translate-x-full bg-blue-500' : ''
+          }`}
+        ></div>
+          </div>
+          <div className={`ml-3 font-medium ${channel === 2 ? 'text-white' : 'text-gray-400'}`}>Channel 2</div>
+        </label>
       </div>
     </div>
   );
