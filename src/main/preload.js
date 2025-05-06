@@ -39,6 +39,9 @@ const electronHandler = {
     const subscription = (_event, ...args) => callback(...args);
     ipcRenderer.on('serial-port-disconnected', subscription);
   },
+  restartRocketTracking: () => {
+    ipcRenderer.send('restart-rocket-tracking');
+  },
 };
 
 contextBridge.exposeInMainWorld('electron', electronHandler);

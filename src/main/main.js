@@ -197,6 +197,12 @@ const createWindow = async () => {
     }
   });
 
+  ipcMain.on('restart-rocket-tracking', () => {
+    // is this even needed?????
+    console.log('restarting rocket tracking');
+    rocketTracking = new Rocket({});
+  });
+
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
   mainWindow.on('ready-to-show', () => {
