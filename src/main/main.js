@@ -138,37 +138,6 @@ const createWindow = async () => {
     }
   });
 
-  setTimeout(() => {
-    console.log('adding datapoint');
-    addDatapoint(
-      53.364502,
-      -1.5139229,
-      205.0939941,
-      3,
-      24,
-      1716840343,
-      -67.0,
-      10.75,
-      101165.594,
-      0,
-    );
-
-    setTimeout(() => {
-      console.log('getting datapoints');
-      const datapoints = getDatapoints({ limit: 1 });
-      console.log(datapoints);
-      setTimeout(() => {
-        const lastDatapoint = getMostRecentDatapoint();
-        console.log(lastDatapoint);
-      }, 1000);
-    }, 5000);
-  }, 5000);
-
-  setTimeout(() => {
-    const lastDatapoint = getMostRecentDatapoint();
-    console.log(lastDatapoint);
-  }, 1000);
-
   const serialPortManager = new SerialPortManager();
   serialPortManager.startSerialPortPolling();
   serialPortManager.on('portAdded', (port) => {
