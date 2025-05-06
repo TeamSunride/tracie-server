@@ -200,6 +200,12 @@ const createWindow = async () => {
             parsed.freqError,
             parsed.radioState,
           );
+          rocketTracking.gpsPositionUpdate(
+            parsed.longitude,
+            parsed.latitude,
+            parsed.altitude,
+            Date.now(),
+          );
         } catch (error) {
           console.error('error parsing data', error);
         }
