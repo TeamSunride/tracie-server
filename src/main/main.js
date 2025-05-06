@@ -24,7 +24,7 @@ import {
 } from '../database/runtime/datapointManager';
 import SerialPortManager from '../serial';
 import { parseRawData } from '../data';
-import Rocket from '../positioning/rocket';
+import Rocket from '../positioning/basicRocket';
 
 const bleReadRequestCallbacks = new Map();
 
