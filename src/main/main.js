@@ -38,7 +38,7 @@ class AppUpdater {
 
 let mainWindow = null;
 
-let rocketTracking = null;
+let rocketTracking = new Rocket({});
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
