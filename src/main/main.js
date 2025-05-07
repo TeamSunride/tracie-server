@@ -157,7 +157,7 @@ const createWindow = async () => {
         try {
           const parsed = parseRawData(data);
           console.log('PARSED DATA', parsed);
-          if (parsed.radioState !== '0') return;
+          if (parsed.radioState !== 0) return;
           addDatapoint(
             parsed.latitude,
             parsed.longitude,
