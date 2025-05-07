@@ -17,11 +17,7 @@ import { ReadlineParser } from 'serialport';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import { BLEEvent } from '../ble';
-import {
-  addDatapoint,
-  getDatapoints,
-  getMostRecentDatapoint,
-} from '../database/runtime/datapointManager';
+import { addDatapoint } from '../database/runtime/datapointManager';
 import SerialPortManager from '../serial';
 import { parseRawData } from '../data';
 import Rocket from '../positioning/basicRocket';
@@ -183,7 +179,7 @@ const createWindow = async () => {
       ipcMain.on('set-groundstation-channel', (event, channel) => {
         console.log('SET GROUNDSTATION CHANNEL', channel);
         // send data over serial port
-        port.port.write(channel === 1 ? "CHANNEL1" : "CHANNEL2");
+        port.port.write(channel === 1 ? 'CHANNEL1' : 'CHANNEL2');
       });
       mainWindow.webContents.send('serial-port-connected');
     }
@@ -196,6 +192,15 @@ const createWindow = async () => {
       mainWindow.webContents.send('serial-port-disconnected');
     }
   });
+
+  // setInterval(() => {
+  //   rocketTracking.gpsPositionUpdate(
+  //     -1.4794116,
+  //     53.382589,
+  //     2,
+  //     Date.now(),
+  //   );
+  // }, 1000);
 
   ipcMain.on('restart-rocket-tracking', () => {
     // is this even needed?????
